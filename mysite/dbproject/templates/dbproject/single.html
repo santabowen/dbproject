@@ -1,0 +1,79 @@
+<html>
+	<!-- Head of the index page. -->
+	<head>
+		<title>US Census Data.</title>
+		<style>
+			.div-inline{ display:inline} 
+
+			.table-caption{ font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase; padding: 8px; font-weight: 400; text-align: left; background: #79aec8; color: #fff; }
+
+			.table-whole{ border-color: #CCC; border-collapse: collapse; border-collapse: separate; border-spacing: 2px; width: 100%; }
+
+			.td-type{font-size: 13px; line-height: 16px; border-bottom: 1px solid #eee;vertical-align: top; padding: 8px; font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;}
+
+			.selection{color: #447e9b; display:-moz-inline-box; display:inline-block; width: 200px; text-align: center}
+
+			table{ margin: auto;}
+		</style>
+	</head>
+	<!-- End of the head. -->
+	<body>
+		<div style="position: relative; width: 100%; min-width: 980px; padding: 0">
+			<!-- Headbar of the index page. -->
+			<div style="width: auto; height: 40px; padding: 10px 40px; background: #417690; line-height: 40px; color: #ffc; overflow: hidden;">
+				<div class="div-inline" style="padding: 0; margin: 0 20px 0 0; font-weight: 200; font-size: 24px; color: #f5dd5d;">
+					Database Project
+				</div>
+				<div class="div-inline" style="padding: 0; margin: 0 20px 0 0; font-weight: 50; font-size: 15px; color: #f5dd5d;">
+					Made by Bowen Li and Dongrui Zhong.
+				</div>
+			</div>
+			<!-- End of the headbar. -->
+
+			<div style="padding: 20px 40px">
+				<h1 style="margin: 0 0 20px; font-weight: 50; font-size: 20px; color: #666;">
+					Show Result
+				</h1>
+				<div style="margin-bottom: 30px;">
+					<table class="table-whole">
+						<caption class="table-caption">
+							QUERY FROM DATABASE
+						</caption>
+					</table>
+					<div style="vertical-align: inherit; border-color: inherit; padding: 30 0 0 5px; text-size: 20px; min-height: 100px ">
+						{% if error_message %}
+							{{ error_message }}
+						{% else %}
+							<table border="1" cellpadding="10" style="align: center">
+							    <tbody>
+							    	<tr>
+							    		<th>state</th>
+								    	{% for name, value in single.get_fields %}
+											{% if name != "id" and name != "state" %}
+										        <th>{{ name }}</th> 
+											{% endif %}
+										{% endfor %}
+									</tr>
+									<tr>
+							    		<th>{{ state }}</th>
+								    	{% for name, value in single.get_fields %}
+											{% if name != "id" and name != "state" %}
+										        <th>{{ value }}</th> 
+											{% endif %}
+										{% endfor %}
+									</tr>
+								</tbody>
+							</table>
+						{% endif %}
+					</div>
+				</div>
+				<!-- End of Simple Queries. -->
+			</div>
+			<div style="padding: 20px 40px">
+				<form action="{% url 'dbproject:index' %}" style="margin-bottom: 0">
+					<input type="submit" value="Back" style="font-size: 15px;">
+				</form>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,151 @@
+<html>
+	<!-- Head of the index page. -->
+	<head>
+		<title>US Census Data.</title>
+		<style>
+			.div-inline{ display:inline} 
+
+			.table-caption{ font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase; padding: 8px; font-weight: 400; text-align: left; background: #79aec8; color: #fff; }
+
+			.table-whole{ border-color: #CCC; border-collapse: collapse; border-collapse: separate; border-spacing: 2px; width: 100%; }
+
+			.td-type{font-size: 13px; line-height: 16px; border-bottom: 1px solid #eee;vertical-align: top; padding: 8px; font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;}
+
+			.selection{color: #447e9b; display:-moz-inline-box; display:inline-block; width: 200px; text-align: center}
+		</style>
+	</head>
+	<!-- End of the head. -->
+	<body>
+		<div style="position: relative; width: 100%; min-width: 980px; padding: 0";>
+			<!-- Headbar of the index page. -->
+			<div style="width: auto; height: 40px; padding: 10px 40px; background: #417690; line-height: 40px; color: #ffc; overflow: hidden;">
+				<div class="div-inline" style="padding: 0; margin: 0 20px 0 0; font-weight: 200; font-size: 24px; color: #f5dd5d;">
+					Database Project
+				</div>
+				<div class="div-inline" style="padding: 0; margin: 0 20px 0 0; font-weight: 50; font-size: 15px; color: #f5dd5d;">
+					Made by Bowen Li and Dongrui Zhong.
+				</div>
+			</div>
+			<!-- End of the headbar. -->
+
+			<!-- Import button of csv. -->
+			<div style="padding: 20 40 0 40px; ">
+				{% if imported %}
+					<p>
+						<strong>
+							CSV has been imported.
+						</strong>
+					</p>
+				{% else %}
+					<form action="{% url 'dbproject:impcsv' %}" style="margin-bottom: 0">
+						<input type="submit" value="Import CSV" style="font-size: 15px;">
+					</form>
+				{% endif %}
+				
+			</div>
+			<!-- End of importing CSV. -->
+
+			<!-- Start three boxes of querying. -->
+			<div style="padding: 20px 40px">
+				<h1 style="margin: 0 0 20px; font-weight: 50; font-size: 20px; color: #666;">
+					Begin operation
+				</h1>
+				<div style="margin-bottom: 30px;">
+					<table class="table-whole">
+						<caption class="table-caption">
+							QUERY FROM DATABASE
+						</caption>
+					</table>
+					<div style="vertical-align: inherit; border-color: inherit;">
+						<form action="{% url 'dbproject:singlequery' %}" method="post" style="padding: 10 0 0 5px;">
+							{% csrf_token %}
+							<span class="selection">
+								<div>From which table:</div>
+								<br>
+								<select name="table">
+									<option value="Population">Population</option>
+									<option value="Sex">Sex</option>
+									<option value="Race">Race</option>
+									<option value="Economy">Economy</option>
+									<option value="Business">Business</option>
+									<option value="Employment">Employment</option>
+									<option value="HealthInsurance">HealthInsurance</option>
+									<option value="Housing">Housing</option>
+									<option value="Income">Income</option>
+								</select>
+							</span>
+							<span class="selection">
+								<div>Select a year:</div>
+								<br>
+								<select name="year">
+									{% for year in years %}
+								        <option value={{ year }}>
+								        	{{ year }}
+								        </option>
+								    {% endfor %}
+								</select>
+							</span>
+							<span class="selection" style="margin-right: 100px">
+								<div>Select a state:</div>
+								<br>
+								<select name="state">
+									{% for state in states %}
+								        <option value="{{ state }}">
+								        	{{ state }}
+								        </option>
+								    {% endfor %}
+								</select>
+							</span>
+							<input type="submit" value="Submit" style="text-align:center"/>
+						</form>
+					</div>
+				</div>
+				<!-- End of Simple Queries. -->
+
+				<!-- Start Prediction part. -->
+				<div style="margin-bottom: 30px;">
+					<table class="table-whole">
+						<caption class="table-caption">
+							PREDICTION AND CLASSIFICATION 
+						</caption>
+					</table>
+					<div style="vertical-align: inherit; border-color: inherit;">
+						<form action="{% url 'dbproject:prediction' %}" method="post" style="padding: 10 0 0 5px; ">
+							{% csrf_token %}
+							<div style="margin-bottom: 10px; color: #447e9b">
+								Type the Percapita GDP, then we will predict the median household income using regression model:
+							</div>
+							<input type="text" name="gdp" style="min-width: 200px">
+							<input type="submit" value="Submit" style="text-align:center"/>
+						</form>
+					</div>
+				</div>
+				<!-- End of Prediction. -->
+
+				<!-- Start of custom queries. -->
+				<div style="margin-bottom: 30px;">
+					<table class="table-whole">
+						<caption class="table-caption">
+							CUSTOM QUERY
+						</caption>
+					</table>
+					<div style="vertical-align: inherit; border-color: inherit;">
+						<form action="{% url 'dbproject:customquery' %}" method="post" style="padding: 10 0 0 5px; ">
+							{% csrf_token %}
+							<div style="margin-bottom: 10px; color: #447e9b">
+								Type a SQLite query here:
+							</div>
+							<div style="margin-bottom: 10px; color: #447e9b; font-size: 15px">
+								Note when querying, use "dbproject_" as the prefix of all tables following with all small cases table names. e.g. "SELECT * FROM dbproject_housing".
+							</div>
+							<input type="text" name="query_sentence" style="min-width: 500px">
+							<input type="submit" value="Submit" style="text-align:center"/>
+						</form>
+					</div>
+				</div>
+				<!-- End of Custom query. -->
+			</div>
+		</div>
+	</body>
+</html>
+
